@@ -10,12 +10,20 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { HashLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const MyProfile = () => {
-  const passwordFormRef = useRef<HTMLFormElement>(null);
   const imageFormRef = useRef<HTMLFormElement>(null);
   const { data } = useSession();
+
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
+
+  const [isPasswordUpdating, setIsPasswordUpdating] = useState<boolean>(false);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+
   useEffect(() => {
     (async () => {
       if (data) {
@@ -24,7 +32,22 @@ const MyProfile = () => {
         setUser(res.data);
       }
     })();
-  }, [data]);
+  }, [data, isPasswordUpdating]);
+
+  const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (newPassword.length < 8)
+      return toast.error("Password must be at least 8 characters long");
+    if (!user) return;
+    setIsPasswordUpdating(true);
+    const res = await updatePassword(user.id, currentPassword, newPassword);
+    if (res?.success) {
+      toast.success(res.message);
+      setCurrentPassword("");
+      setNewPassword("");
+    }
+    setIsPasswordUpdating(false);
+  };
 
   if (!user) return <Loading />;
 
@@ -41,28 +64,34 @@ const MyProfile = () => {
         </section>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
           <form
-            action={async (formData: FormData) => {
-              const password = formData.get("password") as string;
-              const res = await updatePassword(user.id, password);
-              if (res.success) {
-                toast.success(res.message);
-              }
-              passwordFormRef.current?.reset();
-            }}
-            ref={passwordFormRef}
             className='text-slate-100 p-2 rounded shadow flex flex-col gap-2 justify-center items-start'
+            onSubmit={handleUpdatePassword}
           >
-            <label htmlFor='password'>New Password</label>
-            <input
+            {user.password !== null && (
+              <>
+                <Label htmlFor='currentPassword'>Current Password</Label>
+                <Input
+                  type='password'
+                  id='currentPassword'
+                  className='bg-accent'
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  value={currentPassword}
+                  disabled={isPasswordUpdating}
+                />
+              </>
+            )}
+            <Label htmlFor='newPassword'>New Password</Label>
+            <Input
+              className='bg-accent'
               type='password'
-              className='text-black px-4 py-2'
-              name='password'
+              id='newPassword'
+              onChange={(e) => setNewPassword(e.target.value)}
+              value={newPassword}
+              disabled={isPasswordUpdating}
             />
-            <input
-              type='submit'
-              value='Update Password'
-              className=' px-4 py-2 bg-white text-black rounded shadow'
-            />
+            <Button type='submit' disabled={isPasswordUpdating}>
+              Update Password
+            </Button>
           </form>
         </section>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
