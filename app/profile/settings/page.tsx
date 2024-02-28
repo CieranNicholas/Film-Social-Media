@@ -1,28 +1,18 @@
 "use client";
 
-import {
-  getUserDataFromId,
-  updatePassword,
-  updateProfileImage,
-} from "@/lib/server-actions";
+import { getUserDataFromId, updateProfileImage } from "@/lib/server-actions";
 import { UserDataType } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { HashLoader } from "react-spinners";
 import toast from "react-hot-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import UpdatePasswordForm from "./components/update-password-form";
 
 const MyProfile = () => {
   const imageFormRef = useRef<HTMLFormElement>(null);
   const { data } = useSession();
 
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
-
-  const [isPasswordUpdating, setIsPasswordUpdating] = useState<boolean>(false);
-  const [currentPassword, setCurrentPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -32,22 +22,7 @@ const MyProfile = () => {
         setUser(res.data);
       }
     })();
-  }, [data, isPasswordUpdating]);
-
-  const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (newPassword.length < 8)
-      return toast.error("Password must be at least 8 characters long");
-    if (!user) return;
-    setIsPasswordUpdating(true);
-    const res = await updatePassword(user.id, currentPassword, newPassword);
-    if (res?.success) {
-      toast.success(res.message);
-      setCurrentPassword("");
-      setNewPassword("");
-    }
-    setIsPasswordUpdating(false);
-  };
+  }, [data]);
 
   if (!user) return <Loading />;
 
@@ -63,36 +38,7 @@ const MyProfile = () => {
           </div>
         </section>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
-          <form
-            className='text-slate-100 p-2 rounded shadow flex flex-col gap-2 justify-center items-start'
-            onSubmit={handleUpdatePassword}
-          >
-            {user.password !== null && (
-              <>
-                <Label htmlFor='currentPassword'>Current Password</Label>
-                <Input
-                  type='password'
-                  id='currentPassword'
-                  className='bg-accent'
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  value={currentPassword}
-                  disabled={isPasswordUpdating}
-                />
-              </>
-            )}
-            <Label htmlFor='newPassword'>New Password</Label>
-            <Input
-              className='bg-accent'
-              type='password'
-              id='newPassword'
-              onChange={(e) => setNewPassword(e.target.value)}
-              value={newPassword}
-              disabled={isPasswordUpdating}
-            />
-            <Button type='submit' disabled={isPasswordUpdating}>
-              Update Password
-            </Button>
-          </form>
+          <UpdatePasswordForm user={user} />
         </section>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
           <form
