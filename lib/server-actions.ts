@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { UserDataType } from "./types";
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { Prisma } from "@prisma/client";
 import { Movie } from "@/types";
 
@@ -280,9 +280,54 @@ export async function deleteFavouriteTv(
   }
 }
 
-export const updatePassword = async (userId: string, password: string) => {
+export const updatePassword = async (
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+) => {
   try {
-    const hashedPassword = await hash(password, 12);
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) return { message: "User Not Found", success: false };
+    if (user.password === null) {
+      const res = await setPassword(userId, newPassword);
+      return res;
+    } else {
+      const passwordMatch = await compare(currentPassword, user.password);
+      const isReusedPassword = await compare(newPassword, user.password);
+      if (!passwordMatch) {
+        return {
+          message: "Current Password is Incorrect",
+          success: false,
+        };
+      }
+      if (isReusedPassword) {
+        return {
+          message: "You cannot reuse your current password",
+          success: false,
+        };
+      }
+      const res = await setPassword(userId, newPassword);
+      return res;
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
+const setPassword = async (userId: string, newPassword: string) => {
+  try {
+    const hashedPassword = await hash(newPassword, 12);
     const updated = await prisma.user.update({
       where: {
         id: userId,
