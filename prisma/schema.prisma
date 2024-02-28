@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String?
+  email           String?          @unique
+  password        String?
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  posts           Post[] // Array of posts created by the user
+  likes           Like[] // Array of likes made by the user
+  followers       Follows[]        @relation("following")
+  following       Follows[]        @relation("follower")
+  favoriteFilms   FavoriteFilm[]
+  favoriteTvShows FavoriteTvShow[]
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  likes     Like[] // Array of likes received by the post
+}
+
+model Like {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model FavoriteFilm {
+  id         String @id @default(cuid())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
+  mediaId    Int
+  mediaTitle String
+  posterPath String
+}
+
+model FavoriteTvShow {
+  id         String @id @default(cuid())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
+  mediaId    Int
+  mediaTitle String
+  posterPath String
+}
