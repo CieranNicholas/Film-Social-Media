@@ -23,6 +23,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
     "cookie": "^0.6.0",
+    "cuid": "^3.0.0",
     "embla-carousel-react": "^8.0.0-rc23",
     "framer-motion": "^11.0.6",
     "jsonwebtoken": "^9.0.2",

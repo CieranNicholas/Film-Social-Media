@@ -4,11 +4,29 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Adapter } from "next-auth/adapters";
 import { compare } from "bcrypt";
-import { User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import cuid from "cuid";
 
 import prisma from "@/lib/prisma";
 
+function CustomPrismaAdapter(_prisma: typeof prisma) {
+  return {
+    ...PrismaAdapter(_prisma),
+    createUser: (data: User) => {
+      const username = `user-${cuid()}`;
+      return _prisma.user.create({
+        data: {
+          ...data,
+          username,
+        },
+      });
+    },
+  };
+}
+
 const authOptions: NextAuthOptions = {
+  // @ts-ignore
+  adapter: CustomPrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -69,7 +87,6 @@ const authOptions: NextAuthOptions = {
       };
     },
   },
-  adapter: PrismaAdapter(prisma) as Adapter,
 };
 
 export default authOptions;
