@@ -23,9 +23,11 @@ const SignInBtn = () => {
 
   if (!session && !user) {
     return (
-      <Button onClick={() => signIn()} variant='default'>
-        Sign In
-      </Button>
+      <div className='flex gap-4 ml-auto items-center'>
+        <Button onClick={() => signIn()} variant='default'>
+          Sign In
+        </Button>
+      </div>
     );
   }
 
