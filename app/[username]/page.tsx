@@ -40,7 +40,7 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
   if (!user) return <Loading />;
 
   return (
-    <main className='flex justify-center items-center  px-4 py-4 mx-auto md:px-0 md:py-12 bg-background h-full w-full text-white min-h-[100vh]'>
+    <main className='flex justify-center items-center px-4 pt-16 pb-8 mx-auto md:px-0 md:pt-32 md:pb-16 bg-background h-full w-full text-white min-h-[100vh]'>
       <div className='flex flex-col gap-4 w-full md:w-2/3 xl:w-1/2'>
         <ProfileHeader user={user} data={data} />
         <FavouriteSection
