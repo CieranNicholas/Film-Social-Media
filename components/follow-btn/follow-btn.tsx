@@ -5,8 +5,9 @@ import {
   isFollowing as checkIsFollowing,
   unfollowUser,
 } from "@/lib/server-actions";
-import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 interface FollowBtnProps {
   userId: string;
@@ -34,31 +35,27 @@ const FollowBtn: React.FC<FollowBtnProps> = ({ userId, followingId }) => {
         <form
           action={async () => {
             const data = await unfollowUser(userId, followingId);
-            if (data) {
+            console.log(data);
+            if (data.success) {
               setIsFollowing(false);
             }
           }}
         >
-          <input
-            type='submit'
-            value='Unfollow'
-            className='px-4 py-2 bg-red-600 rounded-md'
-          />
+          <Button type='submit' variant='destructive'>
+            Unfollow
+          </Button>
         </form>
       ) : (
         <form
           action={async () => {
             const data = await followUser(userId, followingId);
-            if (data) {
+            console.log(data);
+            if (data.success) {
               setIsFollowing(true);
             }
           }}
         >
-          <input
-            type='submit'
-            value='Follow'
-            className='px-4 py-2 bg-sky-600 rounded-md'
-          />
+          <Button type='submit'>Follow</Button>
         </form>
       )}
     </>

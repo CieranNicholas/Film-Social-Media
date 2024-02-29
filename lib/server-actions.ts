@@ -61,7 +61,53 @@ export const getUserDataFromId = async (id: string): Promise<dbPromise> => {
   }
 };
 
-export const followUser = async (userId: string, followingId: string) => {
+export const getUserDataFromUsername = async (
+  username: string
+): Promise<dbPromise> => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        posts: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        following: true,
+        followers: true,
+      },
+    });
+
+    const user = users.find(
+      (user) => user.username?.toLowerCase() === username
+    );
+    if (user) {
+      return {
+        message: "User Data Fetched Successfully",
+        success: true,
+        data: user,
+      };
+    } else {
+      return {
+        message: "User not found",
+        success: false,
+      };
+    }
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
+export const followUser = async (
+  userId: string,
+  followingId: string
+): Promise<dbPromise> => {
   try {
     const newFollow = await prisma.follows.create({
       data: {
@@ -69,13 +115,27 @@ export const followUser = async (userId: string, followingId: string) => {
         followingId: followingId,
       },
     });
-    return newFollow;
+    return {
+      message: `Successfully followed user`,
+      success: true,
+      data: newFollow,
+    };
   } catch (e) {
-    console.error(e);
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
   }
 };
 
-export const unfollowUser = async (userId: string, followingId: string) => {
+export const unfollowUser = async (
+  userId: string,
+  followingId: string
+): Promise<dbPromise> => {
   try {
     const deleteFollow = await prisma.follows.delete({
       where: {
@@ -85,9 +145,20 @@ export const unfollowUser = async (userId: string, followingId: string) => {
         },
       },
     });
-    return deleteFollow;
+    return {
+      message: `Successfully unfollowed user`,
+      success: true,
+      data: deleteFollow,
+    };
   } catch (e) {
-    console.error(e);
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
   }
 };
 
