@@ -6,3 +6,12 @@ export function formatDate(date: Date | string) {
     day: "numeric",
   });
 }
+
+export const animationValues = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+  },
+};

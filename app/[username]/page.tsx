@@ -1,0 +1,78 @@
+"use client";
+
+import CreatePostSection from "@/components/create-post-section/create-post-section";
+import FavouriteSection from "@/components/favourite-section/favourite-section";
+import ProfileHeader from "@/components/profile-header/profile-header";
+import ProfilePosts from "@/components/profile-posts/profile-posts";
+import { getUserDataFromUsername } from "@/lib/server-actions";
+import { UserDataType } from "@/lib/types";
+import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { HashLoader } from "react-spinners";
+
+interface ProfileProps {
+  params: { username: string };
+}
+
+const animationValues = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+  },
+};
+
+const Profile: React.FC<ProfileProps> = ({ params }) => {
+  const [user, setUser] = useState<UserDataType | undefined>(undefined);
+  const { data } = useSession();
+
+  useEffect(() => {
+    (async () => {
+      const res = await getUserDataFromUsername(params.username);
+      console.log(res);
+      if (!res.success) return;
+      setUser(res.data);
+    })();
+  }, [data]);
+
+  if (!user) return <Loading />;
+
+  return (
+    <main className='flex justify-center items-center  px-4 py-4 mx-auto md:px-0 md:py-12 bg-background h-full w-full text-white min-h-[100vh]'>
+      <div className='flex flex-col gap-4 w-full md:w-2/3 xl:w-1/2'>
+        <ProfileHeader user={user} data={data} />
+        <FavouriteSection
+          sectionType='film'
+          title='Favourite Films'
+          uid={user.id}
+        />
+        <FavouriteSection
+          sectionType='tv'
+          title='Favourite TV Shows'
+          uid={user.id}
+        />
+        <CreatePostSection shouldShow={user.id === data?.user.id} />
+
+        <motion.section
+          className='bg-card rounded-md p-4 flex flex-col gap-4 w-full'
+          initial={animationValues.initial}
+          animate={animationValues.animate}
+        >
+          <ProfilePosts postProp={user.posts} user={user} />
+        </motion.section>
+      </div>
+    </main>
+  );
+};
+
+const Loading = () => {
+  return (
+    <div className='flex flex-col items-center justify-center bg-neutral-900 min-h-[100vh]'>
+      <HashLoader color='#36d7b7' size={50} />
+    </div>
+  );
+};
+
+export default Profile;
