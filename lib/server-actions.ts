@@ -280,6 +280,36 @@ export async function deleteFavouriteTv(
   }
 }
 
+export const updateUsername = async (
+  userId: string,
+  newUsername: string
+): Promise<dbPromise> => {
+  try {
+    const updated = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        username: newUsername,
+      },
+    });
+    return {
+      message: "Username Updated Successfully",
+      success: true,
+      data: updated,
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
 export const updatePassword = async (
   userId: string,
   currentPassword: string,

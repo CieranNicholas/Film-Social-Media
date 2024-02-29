@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { HashLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import UpdatePasswordForm from "./components/update-password-form";
+import UpdateUsernameForm from "./components/update-username-form";
 
 const MyProfile = () => {
   const imageFormRef = useRef<HTMLFormElement>(null);
@@ -31,11 +32,16 @@ const MyProfile = () => {
       <div className='flex flex-col gap-4 w-2/3 items-center justify-start'>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
           <div className='flex flex-col gap-2'>
-            <p className='text-lg font-semibold'> Name</p>
+            <p className='text-lg font-semibold'>Name</p>
             <p>{user.name}</p>
             <p className='text-lg font-semibold'>Email</p>
             <p>{user.email}</p>
+            <p className='text-lg font-semibold'>Username</p>
+            <p>{user.username}</p>
           </div>
+        </section>
+        <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
+          <UpdateUsernameForm user={user} setUser={setUser} />
         </section>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
           <UpdatePasswordForm user={user} />
