@@ -32,7 +32,7 @@ const SignInBtn = () => {
   return (
     <div className='flex gap-4 ml-auto items-center'>
       <Link
-        href='/profile/me'
+        href={`/${user?.username}`}
         className='w-[32px] h-[32px] rounded-full overflow-hidden'
       >
         <img
