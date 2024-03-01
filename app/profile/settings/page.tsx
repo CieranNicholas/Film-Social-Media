@@ -28,8 +28,8 @@ const MyProfile = () => {
   if (!user) return <Loading />;
 
   return (
-    <main className='flex flex-col items-center gap-4 px-24 py-12 bg-neutral-900 h-full w-full text-white min-h-[100vh]'>
-      <div className='flex flex-col gap-4 w-2/3 items-center justify-start'>
+    <main className='flex justify-center items-center px-4 pt-16 pb-8 mx-auto md:px-0 md:pt-32 md:pb-16 bg-background h-full w-full text-white min-h-[100vh]'>
+      <div className='flex flex-col gap-4 w-full md:w-2/3 xl:w-1/2'>
         <section className='flex items-end justify-start gap-4 bg-neutral-800 rounded-md p-4 w-full'>
           <div className='flex flex-col gap-2'>
             <p className='text-lg font-semibold'>Name</p>
