@@ -6,6 +6,7 @@ import ProfileHeader from "@/components/profile-header/profile-header";
 import ProfilePosts from "@/components/profile-posts/profile-posts";
 import { getUserDataFromUsername } from "@/lib/server-actions";
 import { UserDataType } from "@/lib/types";
+import { Post } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ const animationValues = {
 
 const Profile: React.FC<ProfileProps> = ({ params }) => {
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
+  const [posts, setPosts] = useState<Post[]>([]);
   const { data } = useSession();
 
   useEffect(() => {
@@ -35,6 +37,12 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
       setUser(res.data);
     })();
   }, [data]);
+
+  useEffect(() => {
+    if (user) {
+      setPosts(user.posts);
+    }
+  }, [user]);
 
   if (!user) return <Loading />;
 
@@ -52,14 +60,18 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
           title='Favourite TV Shows'
           uid={user.id}
         />
-        <CreatePostSection shouldShow={user.id === data?.user.id} />
+        <CreatePostSection
+          shouldShow={user.id === data?.user.id}
+          posts={posts}
+          setPosts={setPosts}
+        />
 
         <motion.section
           className='bg-card rounded-md p-4 flex flex-col gap-4 w-full'
           initial={animationValues.initial}
           animate={animationValues.animate}
         >
-          <ProfilePosts postProp={user.posts} user={user} />
+          <ProfilePosts posts={posts} setPosts={setPosts} user={user} />
         </motion.section>
       </div>
     </main>

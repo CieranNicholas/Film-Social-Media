@@ -1,10 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { UserDataType } from "./types";
 import { compare, hash } from "bcrypt";
 import { Prisma } from "@prisma/client";
-import { Movie } from "@/types";
 
 export interface dbPromise {
   message: string;
@@ -12,7 +10,10 @@ export interface dbPromise {
   data?: any;
 }
 
-export const createPost = async (formData: FormData, userId: string) => {
+export const createPost = async (
+  formData: FormData,
+  userId: string
+): Promise<dbPromise> => {
   const post = formData.get("post") as string;
 
   try {
@@ -22,8 +23,20 @@ export const createPost = async (formData: FormData, userId: string) => {
         authorId: userId,
       },
     });
+    return {
+      message: "Post Created Successfully",
+      success: true,
+      data: created,
+    };
   } catch (e) {
-    console.error(e);
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
   }
 };
 
@@ -48,6 +61,33 @@ export const getUserDataFromId = async (id: string): Promise<dbPromise> => {
       message: "User Data Fetched Successfully",
       success: true,
       data: res,
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
+export const getPostsFromUserId = async (uid: string): Promise<dbPromise> => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        authorId: uid,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return {
+      message: "Posts Fetched Successfully",
+      success: true,
+      data: posts,
     };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
