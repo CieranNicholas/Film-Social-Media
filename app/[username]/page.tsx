@@ -31,7 +31,6 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
   useEffect(() => {
     (async () => {
       const res = await getUserDataFromUsername(params.username);
-      console.log(res);
       if (!res.success) return;
       setUser(res.data);
     })();

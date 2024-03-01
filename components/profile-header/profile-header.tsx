@@ -21,15 +21,24 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, data }) => {
       animate={animationValues.animate}
     >
       <div className='rounded-full w-24 h-24 overflow-hidden border-4 border-white'>
-        <img
-          src={user.image as string}
-          alt='user image'
-          className='object-contain'
-        />
+        <Link href={`/${user.username}`}>
+          <img
+            src={user.image as string}
+            alt='user image'
+            className='object-contain'
+          />
+        </Link>
       </div>
       <div className='flex flex-col gap-2 items-start justify-center pb-2'>
         <h1>{user.name}</h1>
-        <h1>{user.followers.length} Followers</h1>
+        <div className='flex gap-4 text-sm'>
+          <Link href={`/${user.username}/followers`} scroll={false}>
+            <p>{user.followers.length} Followers</p>
+          </Link>
+          <Link href={`/${user.username}/following`} scroll={false}>
+            <p>{user.following.length} Following</p>
+          </Link>
+        </div>
       </div>
       {/* Check if the profile exists and that the users logged in */}
       {user && data && (
