@@ -78,7 +78,7 @@ export const getUserDataFromUsername = async (
     });
 
     const user = users.find(
-      (user) => user.username?.toLowerCase() === username
+      (user) => user.username?.toLowerCase() === username.toLocaleLowerCase()
     );
     if (user) {
       return {
