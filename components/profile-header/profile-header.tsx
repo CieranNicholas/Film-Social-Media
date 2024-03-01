@@ -30,7 +30,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, data }) => {
         </Link>
       </div>
       <div className='flex flex-col gap-2 items-start justify-center pb-2'>
-        <h1>{user.name}</h1>
+        <div className='flex flex-col justify-center items-start'>
+          <h1 className='font-bold'>{user.name}</h1>
+          <h1>@{user.username}</h1>
+        </div>
         <div className='flex gap-4 text-sm'>
           <Link href={`/${user.username}/followers`} scroll={false}>
             <p>{user.followers.length} Followers</p>
