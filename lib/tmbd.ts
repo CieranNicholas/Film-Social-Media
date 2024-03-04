@@ -81,6 +81,25 @@ export async function GetMovieWatchProvidersById(id: string): Promise<any> {
   return data;
 }
 
+export async function GetMovieVideosById(id: string): Promise<any> {
+  const key = process.env.TMBD_API_KEY;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+    },
+  };
+
+  const response = await fetch(
+    `${baseUrl}/movie/${id}/videos?api_key=${key}&language=en-US`,
+    options
+  );
+
+  const data = await response.json();
+
+  return data;
+}
+
 export async function SearchForMovie(query: string): Promise<Movie[]> {
   const key = process.env.TMBD_API_KEY;
 

@@ -4,15 +4,20 @@ import { useEffect, useState } from "react";
 import { useColor } from "color-thief-react";
 import { Movie } from "@/types";
 import { formatDate, formatMinutes, shouldTextBeWhite } from "@/lib/helpers";
+import { Button } from "@/components/ui/button";
+import useModalVideo from "@/hooks/useModalVideo";
 
 interface HeroProps {
   movie: Movie;
+  videos: any;
 }
 
-const Hero: React.FC<HeroProps> = ({ movie }) => {
+const Hero: React.FC<HeroProps> = ({ movie, videos }) => {
+  const { onOpen } = useModalVideo();
   const [color, setColor] = useState<number[]>([]);
   const [textColor, setTextColor] = useState<"white" | "black">("white");
   const [isDesktop, setIsDesktop] = useState(true);
+  const [trailer, setTrailer] = useState<any>({});
 
   const { data, loading, error } = useColor(
     `https://media.themoviedb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`,
@@ -27,6 +32,16 @@ const Hero: React.FC<HeroProps> = ({ movie }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    const youtubeFiltered = videos.results.filter(
+      (video: any) => video.site === "YouTube"
+    );
+    const trailers = youtubeFiltered.filter(
+      (video: any) => video.type === "Trailer"
+    );
+    setTrailer(trailers[0]);
+  }, [videos]);
 
   useEffect(() => {
     if (data) {
@@ -67,7 +82,7 @@ const Hero: React.FC<HeroProps> = ({ movie }) => {
               src={`https://media.themoviedb.org/t/p/w300_and_h450_bestv2${movie.poster_path}`}
             />
           </div>
-          <div className='flex flex-col gap-4 items-start justify-center'>
+          <div className='flex flex-col gap-4 items-start justify-center h-[450px]'>
             <h2 className='flex text-2xl'>
               <span>{movie.title}</span>
               <span>({movie.release_date.split("-")[0]})</span>
@@ -90,6 +105,13 @@ const Hero: React.FC<HeroProps> = ({ movie }) => {
             <p className='italic'>{movie.tagline}</p>
             <p className='text-lg font-bold'>Overview</p>
             <p>{movie.overview}</p>
+            <Button
+              className='mt-auto'
+              variant='secondary'
+              onClick={() => onOpen(trailer?.key)}
+            >
+              Trailer
+            </Button>
           </div>
         </div>
       </div>
