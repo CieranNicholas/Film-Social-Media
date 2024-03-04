@@ -1,6 +1,12 @@
 "use client";
 
-import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
 
 interface CastCarouselProps {
   cast: any;
@@ -9,7 +15,7 @@ interface CastCarouselProps {
 const CastCarousel: React.FC<CastCarouselProps> = ({ cast }) => {
   return (
     <Carousel
-      className='w-full px-12'
+      className='w-full md:w-4/5 mx-auto xl:w-2/3'
       opts={{
         align: "start",
         loop: true,
@@ -19,21 +25,25 @@ const CastCarousel: React.FC<CastCarouselProps> = ({ cast }) => {
         {cast.map((actor: any) => (
           <CarouselItem
             key={actor.cast_id}
-            className='basis-1/4 md:basis-1/6 2xl:basis-1/12 pl-1'
+            className='basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4'
           >
-            <div className='flex flex-col justify-start items-center max-w-[138px] rounded-lg overflow-hidden'>
-              <img
-                src={`https://media.themoviedb.org/t/p/w138_and_h175_face${actor.profile_path}`}
-                alt=''
-              />
-              <div className='flex flex-col bg-card p-4 items-start justify-start w-full'>
-                <p className='font-bold'>{actor.name}</p>
-                <p className='text-sm'>{actor.character}</p>
+            <div className='flex flex-col justify-center items-center w-full overflow-hidden'>
+              <div className='rounded-full h-32 w-32 overflow-hidden'>
+                <img
+                  src={`https://image.tmdb.org/t/p/original${actor.profile_path}`}
+                  className='w-full h-full object-cover object-center'
+                />
+              </div>
+              <div className='flex flex-col p-4 items-center justify-start w-full text-center'>
+                <p className='font-bold text-md'>{actor.name}</p>
+                <p className='text-xs'>{actor.character}</p>
               </div>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
     </Carousel>
   );
 };

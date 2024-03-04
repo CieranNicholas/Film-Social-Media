@@ -19,7 +19,7 @@ const CountryProvidersList: React.FC<CountryProvidersListProps> = ({
   const [country, setCountry] = useState<string>("GB");
 
   return (
-    <div className='flex flex-col px-12 '>
+    <div className='flex flex-col w-4/5 mx-auto xl:w-2/3'>
       <div className='w-full flex justify-start gap-4 items-center'>
         <h1 className='text-xl '>Where to watch?</h1>
         <Select
