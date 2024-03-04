@@ -2,27 +2,32 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { FavFilm } from "../modal-set-fav-movie/modal-set-fav-movie";
+import Link from "next/link";
 
 interface FavMoviesCardProps {
-  onClick?: () => void;
   film: FavFilm;
+  sectionType: "film" | "tv";
 }
 
-const FavMoviesCard: React.FC<FavMoviesCardProps> = ({ onClick, film }) => {
+const FavMoviesCard: React.FC<FavMoviesCardProps> = ({ film, sectionType }) => {
   return (
-    <Card
-      className='flex-1 bg-cover bg-center bg-no-repeat min-h-28 sm:min-h-40 md:min-h-44 xl:min-h-60'
-      onClick={onClick}
-      style={{
-        backgroundImage: `url("http://image.tmdb.org/t/p/w220_and_h330_face${
-          film.posterPath || film.posterPath
-        }")`,
-      }}
+    <Link
+      href={
+        sectionType === "film"
+          ? `/movie/${film.mediaId}`
+          : `/tv/${film.mediaId}`
+      }
+      className='flex-1 min-h-28 sm:min-h-40 md:min-h-44 xl:min-h-60'
     >
-      <CardContent>
-        {/* <h1 className='shadow'>{film.mediaTitle}</h1> */}
-      </CardContent>
-    </Card>
+      <Card
+        className='h-full w-full bg-cover bg-center bg-no-repeat '
+        style={{
+          backgroundImage: `url("http://image.tmdb.org/t/p/w220_and_h330_face${
+            film.posterPath || film.posterPath
+          }")`,
+        }}
+      ></Card>
+    </Link>
   );
 };
 

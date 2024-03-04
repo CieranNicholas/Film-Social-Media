@@ -27,7 +27,7 @@ const PosterCarousel: React.FC<PosterCarouselProps> = ({ items }) => {
               key={item.id}
               className='pl-1 md:basis-1/6 lg:basis-1/6 bg-red-500'
             >
-              <div className='p-1 '>
+              <div className='p-1'>
                 <Card className='bg-red-700 border-none'>
                   <CardContent>
                     <img
