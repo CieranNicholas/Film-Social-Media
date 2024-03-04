@@ -34,6 +34,7 @@ export interface Movie {
   original_language: string;
   original_title: string;
   overview: string;
+  tagline: string;
   poster_path: string;
   media_type: string;
   genre_ids: number[];
@@ -44,4 +45,11 @@ export interface Movie {
   vote_count: number;
   first_air_date: string;
   original_name: string;
+  genres: Genre[];
+  runtime: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }

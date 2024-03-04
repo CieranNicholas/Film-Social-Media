@@ -15,3 +15,15 @@ export const animationValues = {
     opacity: 1,
   },
 };
+
+export function formatMinutes(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+export function shouldTextBeWhite(rgb: number[]) {
+  const [r, g, b] = rgb;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? true : false;
+}
