@@ -4,9 +4,14 @@ import CreatePostSection from "@/components/create-post-section/create-post-sect
 import FavouriteSection from "@/components/favourite-section/favourite-section";
 import ProfileHeader from "@/components/profile-header/profile-header";
 import ProfilePosts from "@/components/profile-posts/profile-posts";
-import { getUserDataFromUsername } from "@/lib/server-actions";
-import { UserDataType } from "@/lib/types";
-import { Post } from "@prisma/client";
+import ProfileReviews from "@/components/profile-reviews/profile-reviews";
+import useModalNewReview from "@/hooks/useModalNewReview";
+import {
+  getReviewsFromUserId,
+  getUserDataFromUsername,
+} from "@/lib/server-actions";
+import { ReviewDataType, UserDataType } from "@/lib/types";
+import { Review } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -27,8 +32,10 @@ const animationValues = {
 
 const Profile: React.FC<ProfileProps> = ({ params }) => {
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
-  const [posts, setPosts] = useState<Post[]>([]);
   const { data } = useSession();
+  const { isOpen } = useModalNewReview();
+
+  const [reviews, setReviews] = useState<ReviewDataType[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -39,10 +46,25 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
   }, [data]);
 
   useEffect(() => {
-    if (user) {
-      setPosts(user.posts);
-    }
+    if (!user) return;
+    (async () => {
+      const reviews = await getReviewsFromUserId(user.id);
+      console.log(reviews);
+      if (!reviews.success) return console.error(reviews.message);
+      setReviews(reviews.data);
+    })();
   }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (!isOpen) {
+      (async () => {
+        const reviews = await getReviewsFromUserId(user.id);
+        if (!reviews.success) return console.error(reviews.message);
+        setReviews(reviews.data);
+      })();
+    }
+  }, [isOpen]);
 
   if (!user) return <Loading />;
 
@@ -60,7 +82,12 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
           title='Favourite TV Shows'
           uid={user.id}
         />
-        <CreatePostSection
+        <ProfileReviews
+          uid={user.id}
+          reviews={reviews}
+          setReviews={setReviews}
+        />
+        {/* <CreatePostSection
           shouldShow={user.id === data?.user.id}
           posts={posts}
           setPosts={setPosts}
@@ -72,7 +99,7 @@ const Profile: React.FC<ProfileProps> = ({ params }) => {
           animate={animationValues.animate}
         >
           <ProfilePosts posts={posts} setPosts={setPosts} user={user} />
-        </motion.section>
+        </motion.section> */}
       </div>
     </main>
   );

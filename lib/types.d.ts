@@ -1,4 +1,4 @@
-import { Role, User } from "@prisma/client";
+import { Role, User, Review } from "@prisma/client";
 import { Jwt } from "next-auth/jwt";
 
 declare module "next-auth" {
@@ -15,4 +15,8 @@ export interface UserDataType extends User {
   followers: Follows[];
   following: Follows[];
   posts: Post[];
+}
+
+export interface ReviewDataType extends Review {
+  likes: Like[];
 }

@@ -72,7 +72,7 @@ const FavouriteSection: React.FC<FavouriteSectionProps> = ({
       <h1>{title}</h1>
 
       {favouriteList.length > 0 ? (
-        <div className='flex flex-wrap justify-between w-full gap-4 '>
+        <div className='flex flex-wrap justify-start w-full'>
           {favouriteList.map((fav) => (
             <FavMoviesCard film={fav} key={fav.id} sectionType={sectionType} />
           ))}

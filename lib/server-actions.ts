@@ -10,23 +10,97 @@ export interface dbPromise {
   data?: any;
 }
 
-export const createPost = async (
-  formData: FormData,
-  userId: string
-): Promise<dbPromise> => {
-  const post = formData.get("post") as string;
+// export const createPost = async (
+//   formData: FormData,
+//   userId: string
+// ): Promise<dbPromise> => {
+//   const post = formData.get("post") as string;
 
+//   try {
+//     const created = await prisma.post.create({
+//       data: {
+//         content: post,
+//         authorId: userId,
+//       },
+//     });
+//     return {
+//       message: "Post Created Successfully",
+//       success: true,
+//       data: created,
+//     };
+//   } catch (e) {
+// if (e instanceof Prisma.PrismaClientKnownRequestError) {
+//   console.error(e.message);
+//   return {
+//     message: e.message,
+//     success: false,
+//   };
+// }
+// throw e;
+//   }
+// };
+
+export const createReview = async (
+  uid: string,
+  mediaId: number,
+  posterPath: string,
+  mediaTitle: string,
+  reviewContent: string,
+  rating: number,
+  reviewType: "MOVIE" | "TV",
+  releaseDate: string
+): Promise<dbPromise> => {
   try {
-    const created = await prisma.post.create({
+    const created = await prisma.review.create({
       data: {
-        content: post,
-        authorId: userId,
+        authorId: uid,
+        mediaId: mediaId,
+        posterPath: posterPath,
+        mediaTitle: mediaTitle,
+        content: reviewContent,
+        mediaType: reviewType,
+        rating: rating,
+        mediaReleaseDate: releaseDate,
+      },
+    });
+    if (created) {
+      return {
+        message: "Review Created Successfully",
+        success: true,
+        data: created,
+      };
+    }
+    return {
+      message: "Review Creation Failed",
+      success: false,
+      data: {},
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
+export const getReviewsFromUserId = async (uid: string): Promise<dbPromise> => {
+  try {
+    const reviews = await prisma.review.findMany({
+      where: {
+        authorId: uid,
+      },
+      include: {
+        likes: true,
       },
     });
     return {
-      message: "Post Created Successfully",
+      message: "Reviews Fetched Successfully",
       success: true,
-      data: created,
+      data: reviews,
     };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -47,11 +121,6 @@ export const getUserDataFromId = async (id: string): Promise<dbPromise> => {
         id,
       },
       include: {
-        posts: {
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
         following: true,
         followers: true,
       },
@@ -74,44 +143,12 @@ export const getUserDataFromId = async (id: string): Promise<dbPromise> => {
   }
 };
 
-export const getPostsFromUserId = async (uid: string): Promise<dbPromise> => {
-  try {
-    const posts = await prisma.post.findMany({
-      where: {
-        authorId: uid,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return {
-      message: "Posts Fetched Successfully",
-      success: true,
-      data: posts,
-    };
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      console.error(e.message);
-      return {
-        message: e.message,
-        success: false,
-      };
-    }
-    throw e;
-  }
-};
-
 export const getUserDataFromUsername = async (
   username: string
 ): Promise<dbPromise> => {
   try {
     const users = await prisma.user.findMany({
       include: {
-        posts: {
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
         following: true,
         followers: true,
       },
@@ -212,16 +249,6 @@ export const isFollowing = async (followerId: string, followingId: string) => {
     },
   });
   return Boolean(followRecord);
-};
-
-export const deletePost = async (postId: string) => {
-  const deletedPost = await prisma.post.delete({
-    where: {
-      id: postId,
-    },
-  });
-
-  return deletedPost;
 };
 
 export async function AddFavouriteFilm(

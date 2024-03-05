@@ -42,7 +42,7 @@ model User {
   image           String?
   accounts        Account[]
   sessions        Session[]
-  posts           Post[] // Array of posts created by the user
+  posts           Review[] // Array of posts created by the user
   likes           Like[] // Array of likes made by the user
   followers       Follows[]        @relation("following")
   following       Follows[]        @relation("follower")
@@ -67,21 +67,32 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  content   String
-  createdAt DateTime @default(now())
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
-  likes     Like[] // Array of likes received by the post
+enum MediaType {
+  MOVIE
+  TV
+}
+
+model Review {
+  id               String    @id @default(cuid())
+  createdAt        DateTime  @default(now())
+  author           User      @relation(fields: [authorId], references: [id])
+  authorId         String
+  likes            Like[] // Array of likes received by the post
+  content          String
+  mediaId          Int
+  rating           Int
+  mediaType        MediaType
+  mediaTitle       String
+  mediaReleaseDate String
+  posterPath       String
 }
 
 model Like {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  post   Post   @relation(fields: [postId], references: [id])
-  postId String
+  id       String @id @default(cuid())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  review   Review @relation(fields: [reviewId], references: [id])
+  reviewId String
 }
 
 model VerificationToken {
