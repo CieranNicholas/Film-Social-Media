@@ -114,6 +114,36 @@ export const getReviewsFromUserId = async (uid: string): Promise<dbPromise> => {
   }
 };
 
+export const getReviewsByMediaId = async (
+  mediaId: number
+): Promise<dbPromise> => {
+  try {
+    const reviews = await prisma.review.findMany({
+      where: {
+        mediaId: mediaId,
+      },
+      take: 10,
+      include: {
+        likes: true,
+      },
+    });
+    return {
+      message: "Reviews Fetched Successfully",
+      success: true,
+      data: reviews.sort((a, b) => b.likes.length - a.likes.length),
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
 export const getUserDataFromId = async (id: string): Promise<dbPromise> => {
   try {
     const res = await prisma.user.findUnique({

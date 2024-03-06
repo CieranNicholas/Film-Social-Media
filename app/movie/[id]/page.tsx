@@ -7,6 +7,8 @@ import {
 
 import Hero from "./components/hero";
 import Content from "./components/content";
+import { getReviewsByMediaId } from "@/lib/server-actions";
+import { ReviewDataType } from "@/lib/types";
 
 interface MovieInfoProps {
   params: {
@@ -25,12 +27,17 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
 
   const videos = await GetMovieVideosById(id);
 
-  console.log(videos);
+  const reviews = await getReviewsByMediaId(Number(id));
 
   return (
     <main className='flex flex-col justify-start items-center h-[100vh] w-full text-white'>
       <Hero movie={movies} videos={videos} />
-      <Content movie={movies} credits={credits} providers={providers} />
+      <Content
+        movie={movies}
+        credits={credits}
+        providers={providers}
+        reviews={reviews?.data}
+      />
     </main>
   );
 };
