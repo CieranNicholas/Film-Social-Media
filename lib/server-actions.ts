@@ -122,6 +122,35 @@ export const getReviewsByMediaId = async (
       where: {
         mediaId: mediaId,
       },
+      include: {
+        likes: true,
+      },
+    });
+    return {
+      message: "Reviews Fetched Successfully",
+      success: true,
+      data: reviews.sort((a, b) => b.likes.length - a.likes.length),
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
+export const getPopularReviewsByMediaId = async (
+  mediaId: number
+): Promise<dbPromise> => {
+  try {
+    const reviews = await prisma.review.findMany({
+      where: {
+        mediaId: mediaId,
+      },
       take: 10,
       include: {
         likes: true,

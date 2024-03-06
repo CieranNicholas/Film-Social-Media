@@ -7,7 +7,7 @@ import {
 
 import Hero from "./components/hero";
 import Content from "./components/content";
-import { getReviewsByMediaId } from "@/lib/server-actions";
+import { getPopularReviewsByMediaId } from "@/lib/server-actions";
 import { ReviewDataType } from "@/lib/types";
 
 interface MovieInfoProps {
@@ -27,7 +27,7 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
 
   const videos = await GetMovieVideosById(id);
 
-  const reviews = await getReviewsByMediaId(Number(id));
+  const reviews = await getPopularReviewsByMediaId(Number(id));
 
   return (
     <main className='flex flex-col justify-start items-center h-[100vh] w-full text-white'>
