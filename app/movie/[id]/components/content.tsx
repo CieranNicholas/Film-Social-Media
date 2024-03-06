@@ -22,7 +22,7 @@ const Content: React.FC<ContentProps> = ({
   return (
     <section className='flex flex-col items-start justify-center w-full h-full bg-background relative gap-4 py-8'>
       <CastCarousel cast={credits.cast.splice(0, 20)} />
-      <MediaReviewList reviews={reviews} mediaId={movie.id} />
+      <MediaReviewList reviews={reviews} mediaId={movie.id} mediaType='MOVIE' />
       <CountryProvidersList providers={results} />
     </section>
   );

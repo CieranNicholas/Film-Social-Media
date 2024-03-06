@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import useDebounce from "@/hooks/useDebounce";
 import { useEffect, useState } from "react";
 import { Movie } from "@/types";
-import { SearchForMovie, SearchForTv } from "@/lib/tmbd";
+import { GetMovieById, SearchForMovie, SearchForTv } from "@/lib/tmbd";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { MdStar, MdStarOutline } from "react-icons/md";
@@ -26,9 +26,15 @@ function truncateText(text: string, maxWords: number) {
 
 const ModalNewReview = () => {
   const { data: session } = useSession();
-  const { isOpen, onClose } = useModalNewReview();
+  const { isOpen, onClose, mediaId, mediaType } = useModalNewReview();
   const onChange = async (open: boolean) => {
-    if (!open) onClose();
+    if (!open) {
+      setSelectedItem(undefined);
+      setSearchValue("");
+      setReviewContent("");
+      setRating(1);
+      onClose();
+    }
   };
 
   const [searchValue, setSearchValue] = useState<string>("");
@@ -37,7 +43,9 @@ const ModalNewReview = () => {
   const [movieResult, setMovieResult] = useState<Movie[]>([]);
   const [tvResult, setTvResult] = useState<Movie[]>([]);
 
-  const [selectedItem, setSelectedItem] = useState<Movie | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Movie | undefined>(
+    undefined
+  );
   const [selectedType, setSelectedType] = useState<"MOVIE" | "TV">("MOVIE");
 
   const [rating, setRating] = useState<number>(1);
@@ -89,6 +97,20 @@ const ModalNewReview = () => {
     onClose();
     toast.success("Review posted");
   };
+
+  useEffect(() => {
+    console.log(mediaId);
+    if (mediaId) {
+      if (mediaType === "MOVIE") {
+        (async () => {
+          const res = await GetMovieById(mediaId.toString());
+          setSelectedItem(res);
+          setSelectedType("MOVIE");
+          setSearchValue("");
+        })();
+      }
+    }
+  }, [isOpen]);
 
   return (
     <Modal isOpen={isOpen} onChange={onChange}>

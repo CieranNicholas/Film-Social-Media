@@ -31,7 +31,9 @@ const ProfileReviews: React.FC<ProfileReviewsProps> = ({
       animate={animationValues.animate}
     >
       <h1>Reviews</h1>
-      {uid === session?.user.id && <Button onClick={onOpen}>New Review</Button>}
+      {uid === session?.user.id && (
+        <Button onClick={() => onOpen()}>New Review</Button>
+      )}
       <div className='flex flex-col gap-4 w-full'>
         {reviews.map((review: ReviewDataType, index: number) => (
           <>
