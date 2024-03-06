@@ -19,8 +19,8 @@ const CountryProvidersList: React.FC<CountryProvidersListProps> = ({
   const [country, setCountry] = useState<string>("GB");
 
   return (
-    <div className='flex flex-col w-4/5 mx-auto xl:w-2/3'>
-      <div className='w-full flex justify-start gap-4 items-center'>
+    <div className='flex flex-col w-4/5 mx-auto xl:w-2/3 gap-4'>
+      <div className='w-full flex flex-col justify-center gap-2 items-start'>
         <h1 className='text-xl '>Where to watch?</h1>
         <Select
           defaultValue={country}
@@ -39,9 +39,9 @@ const CountryProvidersList: React.FC<CountryProvidersListProps> = ({
         </Select>
       </div>
 
-      <div className='flex flex-1 flex-wrap gap-4 xl:gap-8 justify-start w-full '>
+      <div className='flex flex-1 flex-wrap gap-4 xl:gap-8 justify-start w-full'>
         {providers[country]?.flatrate && (
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-2 bg-card p-4 rounded-lg'>
             <h1 className='text-lg'>Stream</h1>
             <div className='flex flex-1 flex-wrap gap-4'>
               {providers[country]?.flatrate.map((provider: any) => (
@@ -55,7 +55,7 @@ const CountryProvidersList: React.FC<CountryProvidersListProps> = ({
           </div>
         )}
         {providers[country]?.rent && (
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-2 bg-card p-4 rounded-lg'>
             <h1 className='text-lg'>Rent</h1>
             <div className='flex gap-4 flex-1 flex-wrap'>
               {providers[country]?.rent.map((provider: any) => (
@@ -70,7 +70,7 @@ const CountryProvidersList: React.FC<CountryProvidersListProps> = ({
         )}
 
         {providers[country]?.buy && (
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-2 bg-card p-4 rounded-lg'>
             <h1 className='text-lg'>Buy</h1>
             <div className='flex gap-4 flex-1 flex-wrap'>
               {providers[country]?.buy.map((provider: any) => (
