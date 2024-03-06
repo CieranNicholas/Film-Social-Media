@@ -16,7 +16,8 @@ interface ProfileHeaderProps {
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, data }) => {
   return (
     <motion.section
-      className='flex items-end justify-start gap-4 bg-card rounded-md p-4 w-full'
+      // className='flex items-end justify-start gap-4 bg-card rounded-md p-4 w-full'
+      className='bg-card rounded-md p-4 w-full flex flex-col items-center justify-center sm:justify-start sm:gap-4 sm:flex-row'
       initial={animationValues.initial}
       animate={animationValues.animate}
     >
@@ -29,8 +30,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, data }) => {
           />
         </Link>
       </div>
-      <div className='flex flex-col gap-2 items-start justify-center pb-2'>
-        <div className='flex flex-col justify-center items-start'>
+      <div className='flex flex-col gap-2 items-center sm:items-start justify-center pb-2'>
+        <div className='flex flex-col justify-center items-center sm:items-start'>
           <h1 className='font-bold'>{user.name}</h1>
           <h1>@{user.username}</h1>
         </div>
@@ -48,13 +49,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, data }) => {
         <>
           {/* Check if the user is currently viewing their own profile */}
           {user.id === data?.user.id ? (
-            <div className='ml-auto mt-auto mb-2'>
+            <div className='sm:ml-auto sm:mt-auto mb-2'>
               <Button asChild variant='default'>
                 <Link href='/profile/settings'>Settings</Link>
               </Button>
             </div>
           ) : (
-            <div className='ml-auto my-auto'>
+            <div className='sm:ml-auto sm:my-auto'>
               <FollowBtn userId={data.user.id} followingId={user.id} />
             </div>
           )}
