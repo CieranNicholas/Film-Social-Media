@@ -5,6 +5,7 @@ import MediaReviewItem from "../media-review-item/media-review-item";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import useModalNewReview from "@/hooks/useModalNewReview";
+import { useSession } from "next-auth/react";
 
 interface MediaReviewListProps {
   reviews: ReviewDataType[];
@@ -18,6 +19,7 @@ const MediaReviewList: React.FC<MediaReviewListProps> = ({
   mediaType,
 }) => {
   const { onOpen } = useModalNewReview();
+  const { data: session } = useSession();
   return (
     <section className='w-full md:w-4/5 mx-auto xl:w-2/3 flex flex-col gap-4'>
       {reviews.length > 0 ? (
@@ -39,12 +41,18 @@ const MediaReviewList: React.FC<MediaReviewListProps> = ({
           </Link>
         </>
       ) : (
-        <div className='flex flex-col gap-2 items-start'>
-          <p>No user reviews yet, why not be the first</p>
-          <Button onClick={() => onOpen(mediaId, mediaType)}>
-            Create Review
-          </Button>
-        </div>
+        <>
+          {session ? (
+            <div className='flex flex-col gap-2 items-start'>
+              <p>No user reviews yet, why not be the first</p>
+              <Button onClick={() => onOpen(mediaId, mediaType)}>
+                Create Review
+              </Button>
+            </div>
+          ) : (
+            <p className='text-center'>No reviews yet. Log in to write one</p>
+          )}
+        </>
       )}
     </section>
   );
