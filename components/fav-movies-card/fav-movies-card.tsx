@@ -17,16 +17,14 @@ const FavMoviesCard: React.FC<FavMoviesCardProps> = ({ film, sectionType }) => {
           ? `/movie/${film.mediaId}`
           : `/tv/${film.mediaId}`
       }
-      className='min-h-48 basis-1/2 sm:basis-1/3 md:basis-1/5'
+      className='min-h-48 basis-1/2 sm:basis-1/3 md:basis-1/5 p-2'
     >
-      <Card
-        className='h-full w-full bg-cover bg-center bg-no-repeat'
+      <div
+        className='h-full w-full  bg-red-400 rounded-lg bg-cover bg-center bg-no-repeat'
         style={{
-          backgroundImage: `url("http://image.tmdb.org/t/p/w220_and_h330_face${
-            film.posterPath || film.posterPath
-          }")`,
+          backgroundImage: `url("http://image.tmdb.org/t/p/w220_and_h330_face${film.posterPath}")`,
         }}
-      ></Card>
+      ></div>
     </Link>
   );
 };
