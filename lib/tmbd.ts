@@ -24,7 +24,7 @@ export async function GetWeeklyTrending(): Promise<AllTrending> {
   return data;
 }
 
-export async function GetMovieById(id: string): Promise<Movie> {
+export async function GetMovieById(id: string): Promise<Movie | undefined> {
   const key = process.env.TMBD_API_KEY;
   const options = {
     method: "GET",
@@ -33,10 +33,14 @@ export async function GetMovieById(id: string): Promise<Movie> {
     },
   };
 
-  const response = await fetch(
+  const response: any = await fetch(
     `${baseUrl}/movie/${id}?api_key=${key}&language=en-US`,
     options
   );
+
+  if (!response.success) {
+    return undefined;
+  }
 
   const data = await response.json();
 

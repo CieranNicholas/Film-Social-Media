@@ -7,8 +7,10 @@ import {
 
 import Hero from "./components/hero";
 import Content from "./components/content";
-import { getPopularReviewsByMediaId } from "@/lib/server-actions";
-import { ReviewDataType } from "@/lib/types";
+import {
+  getAvarageReviewRating,
+  getPopularReviewsByMediaId,
+} from "@/lib/server-actions";
 
 interface MovieInfoProps {
   params: {
@@ -21,6 +23,14 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
 
   const movies = await GetMovieById(id);
 
+  if (!movies) {
+    return (
+      <main className='flex flex-col justify-center items-center h-[100vh] w-full text-white bg-background'>
+        <p>Movie not found</p>
+      </main>
+    );
+  }
+
   const credits = await GetMovieCreditsById(id);
 
   const providers = await GetMovieWatchProvidersById(id);
@@ -29,6 +39,8 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
 
   const reviews = await getPopularReviewsByMediaId(Number(id));
 
+  const avarageRating = await getAvarageReviewRating(Number(id));
+
   return (
     <main className='flex flex-col justify-start items-center h-[100vh] w-full text-white'>
       <Hero movie={movies} videos={videos} />
@@ -36,7 +48,7 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
         movie={movies}
         credits={credits}
         providers={providers}
-        reviews={reviews?.data}
+        reviews={reviews.data}
       />
     </main>
   );
