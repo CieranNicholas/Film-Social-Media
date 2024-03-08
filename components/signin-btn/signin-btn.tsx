@@ -39,8 +39,8 @@ const SignInBtn = () => {
       >
         <img
           className='w-full h-full object-cover object-center'
-          src={user?.image as string}
-          alt='Avatar'
+          src={(user?.image as string) || (session?.user.image as string)}
+          alt='?'
         />
       </Link>
       <Button onClick={() => signOut()} variant='destructive'>
