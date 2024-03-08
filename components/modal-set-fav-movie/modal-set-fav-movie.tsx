@@ -41,6 +41,7 @@ const ModalSetFavMovie = () => {
         deleteFunction={deleteFavouriteFilm}
         favouriteItems={favouriteFilms}
         setFavouriteItems={setFavouriteFilms}
+        mediaType='MOVIE'
       />
     </Modal>
   );

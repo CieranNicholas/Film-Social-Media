@@ -38,6 +38,7 @@ const ModalSetFavTv = () => {
         deleteFunction={deleteFavouriteTv}
         favouriteItems={favouriteTv}
         setFavouriteItems={setFavouriteTv}
+        mediaType='TV'
       />
     </Modal>
   );
