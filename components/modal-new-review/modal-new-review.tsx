@@ -99,7 +99,6 @@ const ModalNewReview = () => {
   };
 
   useEffect(() => {
-    console.log(mediaId);
     if (mediaId) {
       if (mediaType === "MOVIE") {
         (async () => {

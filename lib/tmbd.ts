@@ -38,7 +38,7 @@ export async function GetMovieById(id: string): Promise<Movie | undefined> {
     options
   );
 
-  if (!response.success) {
+  if (!response.status) {
     return undefined;
   }
 

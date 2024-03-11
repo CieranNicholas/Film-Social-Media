@@ -143,9 +143,49 @@ export const getReviewsByMediaId = async (
   }
 };
 
+export const getAvarageReviewRating = async (
+  mediaId: number
+): Promise<dbPromise> => {
+  if (!mediaId) return { message: "No mediaId provided", success: false };
+  try {
+    const reviews = await prisma.review.findMany({
+      where: {
+        mediaId: mediaId,
+      },
+      include: {
+        likes: true,
+      },
+    });
+    if (reviews.length === 0) {
+      return {
+        message: "No Reviews Found",
+        success: true,
+        data: undefined,
+      };
+    }
+    return {
+      message: "Avarage Rating Fetched Successfully",
+      success: true,
+      data:
+        reviews.reduce((acc, review) => acc + review.rating, 0) /
+        reviews.length,
+    };
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error(e.message);
+      return {
+        message: e.message,
+        success: false,
+      };
+    }
+    throw e;
+  }
+};
+
 export const getPopularReviewsByMediaId = async (
   mediaId: number
 ): Promise<dbPromise> => {
+  if (!mediaId) return { message: "No mediaId provided", success: false };
   try {
     const reviews = await prisma.review.findMany({
       where: {

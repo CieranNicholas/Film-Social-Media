@@ -43,7 +43,7 @@ const MovieInfo: React.FC<MovieInfoProps> = async ({ params }) => {
 
   return (
     <main className='flex flex-col justify-start items-center h-[100vh] w-full text-white'>
-      <Hero movie={movies} videos={videos} />
+      <Hero movie={movies} videos={videos} avarageRating={avarageRating.data} />
       <Content
         movie={movies}
         credits={credits}

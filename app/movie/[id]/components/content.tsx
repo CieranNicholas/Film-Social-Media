@@ -3,6 +3,7 @@ import CastCarousel from "@/components/cast-carousel/cast-carousel";
 import CountryProvidersList from "@/components/country-providers-list/country-providers-list";
 import MediaReviewList from "@/components/media-review-list/media-review-list";
 import { ReviewDataType } from "@/lib/types";
+import { getAvarageReviewRating } from "@/lib/server-actions";
 
 interface ContentProps {
   movie: Movie;

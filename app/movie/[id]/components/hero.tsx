@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { useColor } from "color-thief-react";
 import { Movie } from "@/types";
-import { formatDate, formatMinutes, shouldTextBeWhite } from "@/lib/helpers";
+import { formatMinutes, shouldTextBeWhite } from "@/lib/helpers";
 import { Button } from "@/components/ui/button";
 import useModalVideo from "@/hooks/useModalVideo";
+import { MdStar } from "react-icons/md";
 
 interface HeroProps {
   movie: Movie;
   videos: any;
+  avarageRating: number | undefined;
 }
 
-const Hero: React.FC<HeroProps> = ({ movie, videos }) => {
+const Hero: React.FC<HeroProps> = ({ movie, videos, avarageRating }) => {
   const { onOpen } = useModalVideo();
   const [color, setColor] = useState<number[]>([]);
   const [textColor, setTextColor] = useState<"white" | "black">("white");
@@ -102,6 +104,16 @@ const Hero: React.FC<HeroProps> = ({ movie, videos }) => {
                 {formatMinutes(movie.runtime)}
               </span>
             </div>
+
+            {avarageRating && (
+              <div className='flex flex-col justify-center items-start gap-2'>
+                <p className='opacity-80'>Avarage Rating:</p>
+                <div className='flex items-center justify-center gap-2'>
+                  <MdStar className='text-yellow-400 text-2xl' />
+                  <p>{avarageRating} / 5</p>
+                </div>
+              </div>
+            )}
             <p className='italic'>{movie.tagline}</p>
             <p className='text-lg font-bold'>Overview</p>
             <p>{movie.overview}</p>
