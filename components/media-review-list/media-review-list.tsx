@@ -22,11 +22,13 @@ const MediaReviewList: React.FC<MediaReviewListProps> = ({
   const { data: session } = useSession();
   return (
     <section className='w-full md:w-4/5 mx-auto xl:w-2/3 flex flex-col gap-4'>
-      <div>
-        <Button onClick={() => onOpen(mediaId, mediaType)}>
-          Create Review
-        </Button>
-      </div>
+      {session && (
+        <div>
+          <Button onClick={() => onOpen(mediaId, mediaType)}>
+            Create Review
+          </Button>
+        </div>
+      )}
 
       {reviews.length > 0 ? (
         <>
