@@ -3,10 +3,34 @@
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import useDebounce from '@/hooks/useDebounce';
+import { useRouter } from 'next/navigation';
+import qs from 'query-string';
 
 export function IconInput() {
-	const [isFocused, setIsFocused] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	const router = useRouter();
+
+	const [isFocused, setIsFocused] = useState(false);
+	const [value, setValue] = useState('');
+	const debouncedValue = useDebounce(value, 500);
+
+	useEffect(() => {
+		if (debouncedValue !== '') {
+			const query = {
+				title: debouncedValue,
+			};
+
+			const url = qs.stringifyUrl({
+				url: '/search',
+				query,
+			});
+
+			router.push(url);
+		}
+	}, [debouncedValue, router]);
+
 	const onIconClick = () => {
 		inputRef.current?.focus();
 	};
@@ -19,6 +43,8 @@ export function IconInput() {
 				placeholder='Search...'
 				onFocus={() => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
 			/>
 		</div>
 	);
