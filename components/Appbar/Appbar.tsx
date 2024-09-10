@@ -4,7 +4,7 @@ import { IconInput } from '../icon-input';
 
 const Appbar = () => {
 	return (
-		<header className='flex gap-4 p-4 bg-gradient-to-b from-card to-card/90 shadow text-white fixed w-full min-h-20 items-center justify-end md:justify-between px-2 md:px-24'>
+		<header className='z-30 flex gap-4 p-4 bg-gradient-to-b from-card to-card/90 shadow text-white fixed w-full min-h-20 items-center justify-end md:justify-between px-2 md:px-24'>
 			<Link href='/' className='hidden md:flex'>
 				<span className='sr-only'>Netflix</span>
 				<svg viewBox='0 0 111 30' className='w-24 h-8 text-red-600 fill-current' aria-hidden='true'>
