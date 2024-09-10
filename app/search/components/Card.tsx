@@ -12,10 +12,10 @@ interface Props {
 
 const Card: React.FC<Props> = ({ movie }) => {
 	return (
-		<ShadCnCard key={movie.id} className='border-0'>
+		<ShadCnCard key={movie.id} className='border-0 w-[150px] sm:w-[200px]'>
 			<CardContent className='p-0 relative cursor-pointer'>
 				<Link href={`/${movie.media_type}/${movie.id}`}>
-					<div className='relative h-[300px] w-[200px] rounded-md'>
+					<div className='relative h-[200px] sm:h-[300px] w-full rounded-md'>
 						<Image
 							src={`http://image.tmdb.org/t/p/original/${movie.poster_path}`}
 							alt={movie.title || movie.name || movie.original_title || movie.original_name}

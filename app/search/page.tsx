@@ -25,7 +25,7 @@ const Search: React.FC<Props> = async ({ searchParams }) => {
 
 	return (
 		<main className='flex justify-center items-start px-4 pt-32 pb-8 mx-auto md:px-0 md:pt-32 md:pb-16 bg-background h-full w-full text-white min-h-[100vh] gap-4'>
-			<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4'>
+			<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-4 justify-center items-center'>
 				{results.map((movie) => movie.poster_path && <Card key={movie.id} movie={movie} />)}
 			</div>
 		</main>
