@@ -59,7 +59,6 @@ const CommandSearch: React.FC<CommandSearchProps> = ({
     (async () => {
       const searchResult = await searchFunction(query);
       if (searchResult) {
-        console.log(searchResult);
         setSearchResult(searchResult);
       }
     })();
