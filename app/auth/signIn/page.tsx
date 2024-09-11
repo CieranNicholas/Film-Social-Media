@@ -10,9 +10,11 @@ import { createUser, getUserDataFromId } from '@/lib/server-actions';
 import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 import toast from 'react-hot-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const LoginPage = () => {
 	const { data: session } = useSession();
+	const { toast } = useToast();
 	const router = useRouter();
 	type ActiveTabType = 'login' | 'signup';
 	const [activeTab, setActiveTab] = useState<ActiveTabType>('login');
@@ -68,13 +70,18 @@ const LoginPage = () => {
 		}
 		const res: any = await createUser(name, username, email, password);
 		if (res.success) {
-			toast.success('Account created successfully');
+			toast({
+				description: 'Account created successfully',
+			});
 			await signIn('credentials', {
 				email,
 				password,
 			});
 		} else {
-			toast.error(res.message);
+			toast({
+				variant: 'destructive',
+				description: res.error,
+			});
 		}
 	};
 
