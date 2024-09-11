@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import SignInBtn from '@/components/signin-btn/signin-btn';
 import { IconInput } from '../icon-input';
@@ -22,7 +24,7 @@ const Appbar = () => {
 					<p className='font-bold hover:text-gray-400 transition-colors'>TV</p>
 				</Link>
 			</div>
-			<div className='flex gap-4'>
+			<div className='flex gap-4 items-center'>
 				<IconInput />
 				<SignInBtn />
 			</div>

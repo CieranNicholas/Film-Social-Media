@@ -5,6 +5,17 @@ import { UserDataType } from '@/lib/types';
 import { getUserDataFromId } from '@/lib/server-actions';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LogOut, Settings, User } from 'lucide-react';
 
 const SignInBtn = () => {
 	const { data: session } = useSession();
@@ -32,18 +43,32 @@ const SignInBtn = () => {
 	}
 
 	return (
-		<div className='flex gap-4 items-center'>
-			<Link href={`/${user?.username}`} className='w-[32px] h-[32px] rounded-full overflow-hidden'>
-				<img
-					className='w-full h-full object-cover object-center'
-					src={(user?.image as string) || (session?.user.image as string)}
-					alt='?'
-				/>
-			</Link>
-			<Button onClick={() => signOut()} variant='destructive'>
-				Sign Out
-			</Button>
-		</div>
+		<DropdownMenu>
+			<DropdownMenuTrigger>
+				<Avatar>
+					<AvatarImage src={(user?.image as string) || (session?.user.image as string)} />
+					<AvatarFallback className='border-2 text-xs bg-red-500'>CN</AvatarFallback>
+				</Avatar>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent>
+				<Link href={`/${user?.username}`}>
+					<DropdownMenuItem>
+						<User className='mr-2 h-4 w-4' />
+						<span>Profile</span>
+					</DropdownMenuItem>
+				</Link>
+				<Link href='/profile/settings'>
+					<DropdownMenuItem>
+						<Settings className='mr-2 h-4 w-4' />
+						<span>Settings</span>
+					</DropdownMenuItem>
+				</Link>
+				<DropdownMenuItem onClick={() => signOut()}>
+					<LogOut className='mr-2 h-4 w-4' />
+					<span>Sign Out</span>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 };
 
