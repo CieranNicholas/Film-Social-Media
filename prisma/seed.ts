@@ -1,25 +1,25 @@
-import { PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  const password = await hash("test", 12);
-  const user = await prisma.user.upsert({
-    where: { email: "test@test.com" },
-    update: {},
-    create: {
-      email: "cierannicholas@gmail.com",
-      name: "Cieran Nicholas",
-      password,
-    },
-  });
+async function seed() {
+	const password = await hash('test', 12);
+	await prisma.user.create({
+		data: {
+			email: 'test@test.com',
+			name: 'Test User',
+			username: 'test_user',
+			password,
+		},
+	});
 }
 
-main()
-  .then(() => prisma.$disconnect())
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+seed()
+	.catch((error) => {
+		console.error(error);
+		process.exit(1);
+	})
+	.finally(async () => {
+		await prisma.$disconnect();
+	});
