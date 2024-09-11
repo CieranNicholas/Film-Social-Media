@@ -47,7 +47,7 @@ const SignInBtn = () => {
 			<DropdownMenuTrigger>
 				<Avatar>
 					<AvatarImage src={(user?.image as string) || (session?.user.image as string)} />
-					<AvatarFallback className='border-2 text-xs bg-red-500'>CN</AvatarFallback>
+					<AvatarFallback className='border-2 text-xs bg-red-500 uppercase'>{user?.username ? user.username[0] : '?'}</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
